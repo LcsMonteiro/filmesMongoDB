@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 
 const filmeSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
     title:{
         type: String,
         required: true
@@ -16,43 +17,16 @@ const filmeSchema = new mongoose.Schema({
         required: true
 
     },
-    available_on:{
+    availableOn:{
         type: String,
         required: true
 
     },
-    created_at:{
+    createdAt:{
         type: Date,
         required: true,
         default: new Date
-
     }
 })
 
 module.exports = mongoose.model("filme", filmeSchema)
-
-
-
-
-
-
-
-
-
-
-/* title
-  - String
-  - required 
-* description
-  - String
-  - required
-* type
-  - String
-  - required
-* available_on
-  - String
-  - required
-* created_at
-  - Date
-  - required
-  - default */

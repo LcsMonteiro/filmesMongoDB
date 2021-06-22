@@ -1,34 +1,36 @@
-const { request } = require("express")
+const mongoose = require("mongoose")
+//const { request } = require("express")
 const Filme = require("../models/filme")
 
-const criaFilme = async (request, response)=>{
+const criaFilme = async (req,res)=>{
     const filme = new Filme({
+        _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
         type: req.body.type,
-        availableOn: req.body.available_on,
-        createdAt: req.body.created_at
+        availableOn: req.body.availableOn,
+        createdAt: req.body.createdAt
     })
 
     try {
-       const novoFilme = await filme.save()
-       res.status(201).json(novoFilme) 
+        const novoFilme = await filme.save()
+        res.status(201).json(novoFilme) 
     }catch (err){
-        response.status(400).json({message: err.message})
+        res.status(500).json({message:err.message})
     }
 
 }
 
 const listaFilmes = async (req, res)=> {
-    const filmes = await Filme.find()
+    const filme = await Filme.find()
     res.status(200).json(filmes)
 }
 
 const atualizaFilme =  async (req, res)=> {
     try {
-        const filme = await Livro.findById(req.params.id)
+        const filme = await Filme.findById(req.params.id)
         if (filme == null) {
-            return res.status(404).json({ message: 'filme não encontrado!'})
+            return res.status(400).json({ message: 'filme não encontrado!'})
         }
 
         if (req.body.title != null) {
@@ -44,15 +46,15 @@ const atualizaFilme =  async (req, res)=> {
         }
 
         if (req.body.availableOn != null) {
-            filme.criadoEm = req.body.availableOn
+            filme.availableOn = req.body.availableOn
         }
 
         if (req.body.createdAt != null) {
-            filme.type = req.body.createdAt
+            filme.createdAt = req.body.createdAt
         }
 
-        const filmeAtualizado = await livro.save()
-        res.json(livroAtualizado)
+        const filmeAtualizado = await Filme.save()
+        res.json(filmeAtualizado)
     
     } catch (err) {
         res.status(500).json({ message: err.message})
@@ -63,10 +65,10 @@ const deletaFilme = async (req, res) =>{
     try{
         const filme = await Filme.findById(req.params.id)
         if (filme ==null) {
-            return res.status(404).json({message: "filme nao encontrado."})
+            return res.status(404).json({message: "Filme nao encontrado."})
         }
 
-        await filme.remove()
+        await Filme.remove()
         res.json({message:"Filme deletado com sucesso!"})
     }catch (err) {
         return res.status(500).json({message: err.message})
@@ -77,7 +79,7 @@ const listaUmfilme = async (req, res) => {
     const filme = await Filme.findById(req.params.id)
 
     if (filme ==null){
-        return res.status(404).json({message: "filme nao encontrado"})
+        return res.status(404).json({message: "Filme nao encontrado"})
     }
 
     res.json(filme)
